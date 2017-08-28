@@ -155,6 +155,7 @@ class Metrics:
 
         if self.aggregated != 'only':
             dims.append({'InstanceId': self.instance_id})
+            dims.append({'Hostname': self.hostname})
 
         if self.autoscaling_group_name:
             dims.append({'AutoScalingGroupName': self.autoscaling_group_name})
