@@ -137,6 +137,7 @@ class Metrics:
         self.units = []
         self.values = []
         self.dimensions = []
+        self.hostname = hostname
         self.region = region
         self.instance_id = instance_id
         self.instance_type = instance_type
