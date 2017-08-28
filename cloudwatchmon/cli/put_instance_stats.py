@@ -28,6 +28,7 @@ import datetime
 import os
 import random
 import re
+import socket
 import sys
 import time
 import subprocess
@@ -130,12 +131,13 @@ class Disk:
 
 
 class Metrics:
-    def __init__(self, region, instance_id, instance_type, image_id,
+    def __init__(self, hostname, region, instance_id, instance_type, image_id,
                  aggregated, autoscaling_group_name):
         self.names = []
         self.units = []
         self.values = []
         self.dimensions = []
+        self.hostname = hostname
         self.region = region
         self.instance_id = instance_id
         self.instance_type = instance_type
@@ -154,6 +156,7 @@ class Metrics:
 
         if self.aggregated != 'only':
             dims.append({'InstanceId': self.instance_id})
+            dims.append({'Hostname': self.hostname})
 
         if self.autoscaling_group_name:
             dims.append({'AutoScalingGroupName': self.autoscaling_group_name})
@@ -528,6 +531,8 @@ def main():
             print('Working in verbose mode')
             print('Boto-Version: ' + boto.__version__)
 
+        hostname = socket.getfqdn()
+
         metadata = get_metadata()
 
         if args.verbose:
@@ -544,7 +549,8 @@ def main():
             if args.verbose:
                 print('Autoscaling group: ' + autoscaling_group_name)
 
-        metrics = Metrics(region,
+        metrics = Metrics(hostname,
+                          region,
                           instance_id,
                           metadata['instance-type'],
                           metadata['ami-id'],
